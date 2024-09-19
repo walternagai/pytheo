@@ -25,10 +25,9 @@ def generate_response_openai(api_key, model, prompt):
 
 def main():    
     # importe o arquivo de configuração em formato TOML
-    config = toml.load("config.toml")
-    enterprise = config["enterprise"]
-    api_key = config["api_key"]
-    model = config["model"]
+    enterprise = st.secrets.pytheo.ENTERPRISE
+    api_key = st.secrets.pytheo.OPENAI_API_KEY
+    model = st.secrets.pytheo.MODEL
 
     st.title("🦜 Pytheo")
 
