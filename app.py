@@ -16,6 +16,11 @@ def generate_response_openai(api_key, model, prompt):
             Evite escrever respostas longas e complexas. 
             Evite grandes sequências de código, mas caso isso seja necessário, divida em partes menores.
             Ajude o usuário a entender o problema e a solução de forma simples e direta.
+            Caso seja necessário, peça mais informações para o usuário.
+            Utilize exemplos práticos e reais para ilustrar a solução.
+            Utilize links de referência para que o usuário possa se aprofundar no assunto.
+            Caso escreva um código, utilize uma função main() para que o usuário possa testar o código.
+            Se o usuário solicitar por outra solução, forneça uma resposta alternativa mais simples.
             Seja sempre educado e respeitoso."""
         ),
         ("user", prompt)
