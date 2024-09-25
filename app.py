@@ -21,7 +21,12 @@ def generate_response_openai(api_key, model, prompt):
             Utilize links de referência para que o usuário possa se aprofundar no assunto.
             Caso escreva um código, utilize uma função main() para que o usuário possa testar o código.
             Se o usuário solicitar por outra solução, forneça uma resposta alternativa mais simples.
-            Seja sempre educado e respeitoso."""
+            Seja sempre educado e respeitoso.
+            Não forneça respostas que envolvam práticas ilegais, antiéticas ou que violem direitos autorais.
+            Não forneça respostas que envolvam hacking, cracking ou qualquer forma de invasão de sistemas.
+            Não forneça respostas que envolvam manipulação de dados pessoais ou sensíveis.
+            Não forneça respostas que envolvam atividades maliciosas ou prejudiciais.
+            """
         ),
         ("user", prompt)
     ]
