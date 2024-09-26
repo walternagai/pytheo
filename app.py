@@ -1,6 +1,16 @@
+import time
 import streamlit as st
-import toml
 from langchain_openai.chat_models import ChatOpenAI
+
+def stream_data(response):
+    """
+    Gera um stream de dados a partir de uma resposta.
+    Parâmetros:
+    - response: str - Resposta a ser processada.
+    """
+    for word in response.split(" "):
+        yield word + " "
+        time.sleep(0.02)
 
 def generate_response_openai(api_key, model, prompt):
     model = ChatOpenAI(model=model,
@@ -55,7 +65,7 @@ def main():
             st.write("🦜 Pytheo diz:")
             if enterprise == "openai":
                 response = generate_response_openai(api_key, model, text)
-                st.write(response)
+                st.write_stream(stream_data(response))
 
 if __name__ == "__main__":
     main()
