@@ -52,7 +52,10 @@ def main():
 
     st.write("Pytheo é um assistente virtual que te ajuda a aprender Python de forma simples e objetiva.")
 
-    st.markdown("### Histórico do Chat")
+    st.markdown("* As perguntas e respostas geradas ficam armazenadas no histórico abaixo.")
+    st.markdown("* O histórico é **apagado** ao recarregar a página.")
+
+    st.markdown("### Chat com Pytheo")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -80,7 +83,9 @@ def main():
         # fazer um stream da resposta
         for partial_response in stream_data(response):
             full_response += str(partial_response)
-            response_text.markdown(full_response + "|")
+            response_text.markdown(full_response + "| ")
+
+        response_text.markdown(full_response)
 
         # Salva a resposta completa no histórico
         st.session_state.messages.append({"role": "assistant", "content": response})
