@@ -45,7 +45,6 @@ def generate_response_openai(api_key, model, prompt):
 
 def main():    
     # importe o arquivo de configuração em formato TOML
-    enterprise = st.secrets.pytheo.ENTERPRISE
     api_key = st.secrets.pytheo.OPENAI_API_KEY
     model = st.secrets.pytheo.MODEL
 
@@ -53,19 +52,38 @@ def main():
 
     st.write("Pytheo é um assistente virtual que te ajuda a aprender Python de forma simples e objetiva.")
 
-    st.markdown("""
-                ### Aviso de Privacidade\n
-                * Este aplicativo não armazena suas perguntas e respostas.\n
-                * Evite perguntas ofensivas ou que possam violar a privacidade de outras pessoas.
-    """)
-    with st.form(key="my_form"):
-        text = st.text_area("Escreva sua dúvida da linguagem Python:")
-        submitted = st.form_submit_button("Enviar")
-        if submitted:
-            st.write("🦜 Pytheo diz:")
-            if enterprise == "openai":
-                response = generate_response_openai(api_key, model, text)
-                st.write_stream(stream_data(response))
+    st.markdown("### Histórico do Chat")
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+    
+    # Exibe mensagens do histórico
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    question = st.chat_input("Escreva sua dúvida da linguagem Python:")
+
+    if question:
+        st.session_state.messages.append({"role": "user", "content": question})
+        with st.chat_message("user"):
+            st.markdown(question)
+
+        response_container = st.chat_message("assistant")
+        response_text = response_container.empty()
+
+        response_text.markdown("🦜 Pytheo está pensando...")
+
+        response = generate_response_openai(api_key, model, question)
+        
+        full_response = ""
+        # fazer um stream da resposta
+        for partial_response in stream_data(response):
+            full_response += str(partial_response)
+            response_text.markdown(full_response + "|")
+
+        # Salva a resposta completa no histórico
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 if __name__ == "__main__":
     main()
