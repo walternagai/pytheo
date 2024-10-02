@@ -1,6 +1,6 @@
 import time
 import streamlit as st
-from langchain_openai.chat_models import ChatOpenAI
+from langchain_openai.chat_models import ChatOpenAI # type: ignore
 
 def stream_data(response):
     """
@@ -75,7 +75,7 @@ def main():
         response_container = st.chat_message("assistant")
         response_text = response_container.empty()
 
-        response_text.markdown("🦜 Pytheo está pensando...")
+        response_text.markdown("🦜 Pytheo está buscando uma resposta...")
 
         response = generate_response_openai(api_key, model, question)
         
