@@ -113,6 +113,8 @@ def main():
             use_container_width=True,
             disabled=len(st.session_state.messages) == 0
         )
+        if download_button:
+            st.toast("Histórico baixado com sucesso!", icon="success")
 
     if clear_messages:
         st.session_state.messages = []
