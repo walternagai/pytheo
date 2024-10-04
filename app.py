@@ -59,25 +59,27 @@ def main():
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-    
+
+    if "text_content" not in st.session_state:
+        st.session_state.text_content = ""
+
     # Exibe mensagens do histórico
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    question = st.chat_input("Escreva sua dúvida da linguagem Python:")
-
-    if question:
-        st.session_state.messages.append({"role": "user", "content": question})
+    question_input = st.chat_input("Digite sua pergunta aqui...", key="question_input")
+    if question_input:
+        st.session_state.messages.append({"role": "user", "content": question_input})
         with st.chat_message("user"):
-            st.markdown(question)
+            st.markdown(question_input)
 
         response_container = st.chat_message("assistant")
         response_text = response_container.empty()
 
-        response_text.markdown("🦜 Pytheo está buscando uma resposta...")
+        response_text.markdown("🦜 Pytheo está buscando a resposta de sua pergunta, aguarde...")
 
-        response = generate_response_openai(api_key, model, question)
+        response = generate_response_openai(api_key, model, question_input)
         
         full_response = ""
         # fazer um stream da resposta
@@ -89,6 +91,33 @@ def main():
 
         # Salva a resposta completa no histórico
         st.session_state.messages.append({"role": "assistant", "content": response})
+
+        text_content = ""
+        for message in st.session_state.messages:
+            text_content += f"{message['role']}: {message['content']}\n"
+        st.session_state.text_content = text_content
+
+    options_columns = st.columns(2)
+    with options_columns[0]:
+        clear_messages = st.button("Limpar histórico", 
+                                   help="Apaga o histórico de mensagens", 
+                                   use_container_width=True,
+                                   disabled=len(st.session_state.messages) == 0)
+        
+    with options_columns[1]:
+        download_button = st.download_button(
+            label="Baixar histórico",
+            data=st.session_state.text_content,
+            file_name="historico_pytheo.txt",
+            mime="text/plain",
+            use_container_width=True,
+            disabled=len(st.session_state.messages) == 0
+        )
+
+    if clear_messages:
+        st.session_state.messages = []
+        st.session_state.text_content = ""
+        st.rerun()
 
 if __name__ == "__main__":
     main()
